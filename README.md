@@ -1,2 +1,2 @@
-# AzureStorageQueueDemoGAB2016
+# Azure Storage Queue Demo - GAB2016
 ## Prerequisites
