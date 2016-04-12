@@ -24,10 +24,10 @@ In this section we will be setting up a new project to connect to Azure Storage.
 4. Add a reference to **System.Configuration** to your project so we can use the **ConfigurationManager**.
 5. Now we are going to get a reference to our Cloud Storage Account:
 
-    var account = CloudStorageAccount.Parse(ConfigurationManager.AppSettings["StorageConnectionString"]);
+		var account = CloudStorageAccount.Parse(ConfigurationManager.AppSettings["StorageConnectionString"]);
 
 6. Create a queue client object:
 
-    var queueClient = account.CreateCloudQueueClient();
-    var queue = queueClient.GetQueueReference("orders");
-    queue.CreateIfNotExists();
+	    var queueClient = account.CreateCloudQueueClient();
+	    var queue = queueClient.GetQueueReference("orders");
+	    queue.CreateIfNotExists();
