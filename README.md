@@ -51,7 +51,7 @@ In this section we will be setting up a new project to connect to Azure Storage.
         Console.WriteLine("Press any key to continue...");
         Console.ReadKey();
 
-4. If you run this application it should create a new queue and then add your messages to that queue. You can then use a tool such as the Cloud Explorer built into VS2015 or [Azure Storage Explorer](ttps://azurestorageexplorer.codeplex.com/ "https://azurestorageexplorer.codeplex.com/") to see your message.
+4. If you run this application it should create a new queue and then add your messages to that queue. You can then use a tool such as the Cloud Explorer built into VS2015 or [Azure Storage Explorer](ttps://azurestorageexplorer.codeplex.com/ "https://azurestorageexplorer.codeplex.com/") to see your messages.
 
 ## Part 3 - Getting and deleting messages from a queue
 
