@@ -30,7 +30,7 @@ In this section we will be setting up a new project to connect to Azure Storage.
 
 		var account = CloudStorageAccount.Parse(ConfigurationManager.AppSettings["StorageConnectionString"]);
 
-## Part 2 - Creating a queue and adding a message
+## Part 2 - Creating a queue and adding messages
 
 1. Now we are going to create a queue client object, get a reference to our **orders** queue, and then create it if it doesn't exist:
 
@@ -38,9 +38,46 @@ In this section we will be setting up a new project to connect to Azure Storage.
 	    var queue = queueClient.GetQueueReference("orders");
 	    queue.CreateIfNotExists();
 
-2. Then we are going to add a message with the **queue.AddMessage** function:
+2. Add a series of fake orders to our queue the **queue.AddMessage** function:
 
-		queue.AddMessage(new CloudQueueMessage("ThisIsMyMessage"));
+        for (int orderid = 1000; orderid < 1100; orderid++)
+        {
+            queue.AddMessage(new CloudQueueMessage(orderid.ToString()));
+            Console.WriteLine("Order {0} placed", orderid);
+        }
 
-3. Optionally you can add a **Console.ReadKey()** to the end of your **Main()** just to prevent the console window from closing until you press a key after it has completed executing.
-4. If you run this application it should create a new queue and then add your message to that queue. You can then use a tool such as the Cloud Explorer built into VS2015 or [Azure Storage Explorer](ttps://azurestorageexplorer.codeplex.com/ "https://azurestorageexplorer.codeplex.com/") to see your message.
+3. Optionally you can add a **Console.ReadKey()** to the end of your **Main()** just to prevent the console window from closing until you press a key after it has completed executing:
+
+        Console.WriteLine("Press any key to continue...");
+        Console.ReadKey();
+
+4. If you run this application it should create a new queue and then add your messages to that queue. You can then use a tool such as the Cloud Explorer built into VS2015 or [Azure Storage Explorer](ttps://azurestorageexplorer.codeplex.com/ "https://azurestorageexplorer.codeplex.com/") to see your message.
+
+## Part 3 - Getting and deleting messages from a queue
+
+1. Now create another Windows Console Application project in the same solution named **processorders**.
+2. Repeat Part 1 steps 2 through 5 and Part 2 step 1 with this new project to connect to your queue.
+3. We want the **processorders** application to continue to run so lets put the "processing" code in a **while(true)** loop:
+
+	    while (true)
+	    {
+	        var message = queue.GetMessage();
+
+4. If no message is retrieved (empty queue) then lets wait a bit and check again:
+
+	        if (null == message)
+	        {
+	            Console.WriteLine("No orders found. Hitting the snooze button...");
+	            Thread.Sleep(5000);
+	            continue;
+	        }
+
+5. However, if we did manage to retrieve a message, lets "process" it and then delete the message:
+
+            Console.Write("Processing order {0}...", message.AsString);
+            Thread.Sleep(500);
+            Console.WriteLine("Complete.");
+            queue.DeleteMessage(message);
+		}
+
+6. If we now execute **processorders** we should see it work its way through the orders we had previously placed in the queue with the **placeorders** application.

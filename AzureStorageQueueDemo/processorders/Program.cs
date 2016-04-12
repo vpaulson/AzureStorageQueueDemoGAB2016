@@ -28,7 +28,7 @@ namespace processorders
                 var message = queue.GetMessage(null, options);
                 if (null == message)
                 {
-                    Console.WriteLine("No orders found. Sleeping...");
+                    Console.WriteLine("No orders found. Hitting the snooze button...");
                     Thread.Sleep(5000);
                     continue;
                 }
