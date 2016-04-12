@@ -17,7 +17,7 @@ namespace placeorders
         {
             var account = CloudStorageAccount.Parse(ConfigurationManager.AppSettings["StorageConnectionString"]);
 
-            QueueRequestOptions options = new QueueRequestOptions { RetryPolicy = new LinearRetry() };
+            var options = new QueueRequestOptions { RetryPolicy = new LinearRetry() };
             var queueClient = account.CreateCloudQueueClient();
             var queue = queueClient.GetQueueReference("orders");
             queue.CreateIfNotExists();

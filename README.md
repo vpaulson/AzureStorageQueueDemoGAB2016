@@ -12,12 +12,22 @@ Below are the tools I used in this Demo. Similar versions of Visual Studio and t
 - Azure SDK 2.8
 - Azure Free Trial Subscription
 
-You can also use the Azure Storage Emulator that is installed with the Azure SDK by using "UseDevelopmentStorage=true" in place of the Storage Account connection string rather than an actual Azure Subscription.
+You can also use the Azure Storage Emulator that is installed with the Azure SDK by using **UseDevelopmentStorage=true** in place of the Storage Account connection string rather than an actual Azure Subscription.
 
 ## Part 1 - Connecting to a Storage Account
 
 In this section we will be setting up a new project to connect to Azure Storage.
 
-1. First you will need to create a new Visual Studio Windows Console Application Project named **placeorders** and add it to a new Solution named **AzureStorageQueuesDemo** or something similar.
+1. First you will need to create a new Windows Console Application Project in Visual Studio named **placeorders** and add it to a new Solution named **AzureStorageQueuesDemo**.
 2. Use NuGet to add the **WindowsAzure.Storage** package to your new project. It will install several dependencies at the same time.
-3. Retrieve your Storage Account Access Key from the Azure Portal. You can copy the entire connection string from the Access Keys popup. Add this connection string to your App.config as an appsetting. 
+3. Retrieve your Storage Account Access Key from the Azure Portal. You can copy the entire connection string from the Access Keys popup. Add this connection string to your App.config as an appsetting. Alternatively you can use the value of **UseDevelopmentStorage=true** instead to use the Storage Emulator.
+4. Add a reference to **System.Configuration** to your project so we can use the **ConfigurationManager**.
+5. Now we are going to get a reference to our Cloud Storage Account:
+
+    var account = CloudStorageAccount.Parse(ConfigurationManager.AppSettings["StorageConnectionString"]);
+
+6. Create a queue client object:
+
+    var queueClient = account.CreateCloudQueueClient();
+    var queue = queueClient.GetQueueReference("orders");
+    queue.CreateIfNotExists();
