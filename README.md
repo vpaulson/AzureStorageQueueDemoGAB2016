@@ -18,5 +18,6 @@ You can also use the Azure Storage Emulator that is installed with the Azure SDK
 
 In this section we will be setting up a new project to connect to Azure Storage.
 
-1. First you will need to create a new Visual Studio Windows Console Application Project named **placeorders** and add it to a new Solution named **AzureStorageQueuesDemoGab2016** or something similar.
+1. First you will need to create a new Visual Studio Windows Console Application Project named **placeorders** and add it to a new Solution named **AzureStorageQueuesDemo** or something similar.
 2. Use NuGet to add the **WindowsAzure.Storage** package to your new project. It will install several dependencies at the same time.
+3. Retrieve your Storage Account Access Key from the Azure Portal. You can copy the entire connection string from the Access Keys popup. Add this connection string to your App.config as an appsetting. 
