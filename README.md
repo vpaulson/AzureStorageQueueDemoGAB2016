@@ -14,7 +14,7 @@ Below are the tools I used in this Demo. Similar versions of Visual Studio and t
 
 You can also use the Azure Storage Emulator that is installed with the Azure SDK by using **UseDevelopmentStorage=true** in place of the Storage Account connection string rather than an actual Azure Subscription.
 
-## Part 1 - Connecting to a Storage Account
+## Part 1 - Connecting to a Storage Account ##
 
 In this section we will be setting up a new project to connect to Azure Storage.
 
@@ -30,7 +30,7 @@ In this section we will be setting up a new project to connect to Azure Storage.
 
 		var account = CloudStorageAccount.Parse(ConfigurationManager.AppSettings["StorageConnectionString"]);
 
-## Part 2 - Creating a queue and adding messages
+## Part 2 - Creating a queue and adding messages ##
 
 1. Now we are going to create a queue client object, get a reference to our **orders** queue, and then create it if it doesn't exist:
 
@@ -53,11 +53,11 @@ In this section we will be setting up a new project to connect to Azure Storage.
 
 4. If you run this application it should create a new queue and then add your messages to that queue. You can then use a tool such as the Cloud Explorer built into VS2015 or [Azure Storage Explorer](ttps://azurestorageexplorer.codeplex.com/ "https://azurestorageexplorer.codeplex.com/") to see your messages.
 
-## Part 3 - Getting and deleting messages from a queue
+## Part 3 - Getting and deleting messages from a queue ##
 
 1. Now create another Windows Console Application project in the same solution named **processorders**.
 2. Repeat Part 1 steps 2 through 5 and Part 2 step 1 with this new project to connect to your queue.
-3. We want the **processorders** application to continue to run so lets put the "processing" code in a **while(true)** loop:
+3. We want the **processorders** application to continue to run so lets put the "processing" code in a **while(true)** loop and get a message:
 
 	    while (true)
 	    {
@@ -81,3 +81,15 @@ In this section we will be setting up a new project to connect to Azure Storage.
 		}
 
 6. If we now execute **processorders** we should see it work its way through the orders we had previously placed in the queue with the **placeorders** application.
+
+## Part 4 - Handling Visibility Timeout ##
+
+Since Azure Storage Queues operate on a At-Least-Once delivery method, we need to update our code to be aware of this visibility timeout to prevent unexpected handling of our messages.
+
+TODO
+
+## Part 5 - Retry Options ##
+
+Unfortunately, we do not live in a perfect world and as a result there can occasionally be errors accessing the queue. When those errors are potentially transient server issues we should retry our queue operations rather than fail.
+
+TODO
