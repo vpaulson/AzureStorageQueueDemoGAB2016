@@ -21,13 +21,26 @@ In this section we will be setting up a new project to connect to Azure Storage.
 1. First you will need to create a new Windows Console Application Project in Visual Studio named **placeorders** and add it to a new Solution named **AzureStorageQueuesDemo**.
 2. Use NuGet to add the **WindowsAzure.Storage** package to your new project. It will install several dependencies at the same time.
 3. Retrieve your Storage Account Access Key from the Azure Portal. You can copy the entire connection string from the Access Keys popup. Add this connection string to your App.config as an appsetting. Alternatively you can use the value of **UseDevelopmentStorage=true** instead to use the Storage Emulator.
-4. Add a reference to **System.Configuration** to your project so we can use the **ConfigurationManager**.
+4. Add a references to **System.Configuration** and **Microsoft.WindowsAzure.Storage** to your project.
+
+	    using System.Configuration;
+	    using Microsoft.WindowsAzure.Storage;
+
 5. Now we are going to get a reference to our Cloud Storage Account:
 
 		var account = CloudStorageAccount.Parse(ConfigurationManager.AppSettings["StorageConnectionString"]);
 
-6. Create a queue client object:
+## Part 2 - Creating a queue and adding a message
+
+1. Now we are going to create a queue client object, get a reference to our **orders** queue, and then create it if it doesn't exist:
 
 	    var queueClient = account.CreateCloudQueueClient();
 	    var queue = queueClient.GetQueueReference("orders");
 	    queue.CreateIfNotExists();
+
+2. Then we are going to add a message with the **queue.AddMessage** function:
+
+		queue.AddMessage(new CloudQueueMessage("ThisIsMyMessage"));
+
+3. Optionally you can add a **Console.ReadKey()** to the end of your **Main()** just to prevent the console window from closing until you press a key after it has completed executing.
+4. If you run this application it should create a new queue and then add your message to that queue. You can then use a tool such as the Cloud Explorer built into VS2015 or [Azure Storage Explorer](ttps://azurestorageexplorer.codeplex.com/ "https://azurestorageexplorer.codeplex.com/") to see your message.
