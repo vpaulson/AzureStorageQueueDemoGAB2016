@@ -24,7 +24,7 @@ namespace placeorders
 
             for (int orderid = 1000; orderid < 1100; orderid++)
             {
-                queue.AddMessage(new CloudQueueMessage(orderid.ToString()), null, TimeSpan.FromSeconds(30), options);
+                queue.AddMessage(new CloudQueueMessage(orderid.ToString()), null, null, options);
                 Console.WriteLine("Order {0} placed", orderid);
             }
 

@@ -18,14 +18,14 @@ namespace processorders
         {
             var account = CloudStorageAccount.Parse(ConfigurationManager.AppSettings["StorageConnectionString"]);
 
-            var options = new QueueRequestOptions { RetryPolicy = new LinearRetry() };
+            var options = new QueueRequestOptions { RetryPolicy = new LinearRetry(TimeSpan.FromSeconds(2), 10) };
             var queueClient = account.CreateCloudQueueClient();
             var queue = queueClient.GetQueueReference("orders");
             queue.CreateIfNotExists();
 
             while (true)
             {
-                var message = queue.GetMessage(null, options);
+                var message = queue.GetMessage(TimeSpan.FromSeconds(60), options);
                 if (null == message)
                 {
                     Console.WriteLine("No orders found. Hitting the snooze button...");
@@ -33,17 +33,19 @@ namespace processorders
                     continue;
                 }
 
-                var messageHeartbeatTimer = KeepMessageHidden(queue, message, options, 5000);
-                try
+                using (var messageHeartbeatTimer = KeepMessageHidden(queue, message, options, 45000))
                 {
-                    Console.Write("Processing order {0}...", message.AsString);
-                    Thread.Sleep(500);
-                    Console.WriteLine("Complete.");
-                    queue.DeleteMessage(message, options);
-                }
-                finally
-                {
-                    messageHeartbeatTimer?.Stop();
+                    try
+                    {
+                        Console.Write("Processing order {0}...", message.AsString);
+                        Thread.Sleep(500);
+                        Console.WriteLine("Complete.");
+                        queue.DeleteMessage(message, options);
+                    }
+                    finally
+                    {
+                        messageHeartbeatTimer?.Stop();
+                    }
                 }
             }
         }
